@@ -19,11 +19,12 @@ function Login() {
     }
   }, [user])
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault()
     try {
       await login(email, password)
     } catch (error) {
-      setLoginError("Credenciales invalidas")
+      setLoginError('Credenciales invalidas')
       setTimeout(() => {
         setLoginError('')
       }, 3000)
@@ -51,7 +52,7 @@ function Login() {
           </div>
           <main className='flex flex-col items-center justify-between p-6 sm:p-12 md:w-1/2'>
             <div></div>
-            <div className='w-full'>
+            <form onSubmit={handleSubmit} className='w-full'>
               <h1 className='mb-4 text-xl font-semibold text-gray-700 dark:text-gray-200'>
                 Iniciar sesión
               </h1>
@@ -60,7 +61,7 @@ function Login() {
                 <Input
                   className='mt-1'
                   type='email'
-                  placeholder='john@doe.com'
+                  placeholder='ejemplo@dominio.com'
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -77,14 +78,16 @@ function Login() {
                 />
               </Label>
 
-              <Button className='mt-4' block onClick={handleSubmit}>
-                Entrar
-              </Button>
+              <input
+                type='submit'
+                value='Entrar'
+                className=' align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none px-4 py-2 rounded-lg text-sm text-white bg-purple-600 border border-transparent active:bg-purple-600 hover:bg-purple-700 focus:shadow-outline-purple w-full mt-4'
+              />
 
-              {loginError && (
-                <div className='mt-4 text-red-600 text-sm text-center'>{loginError}</div>
-              )}
-            </div>
+              <div className='mt-4 text-red-600 text-sm text-center'>
+                {loginError}
+              </div>
+            </form>
             <div className='text-center text-sm text-gray-400 italic font-light w-full'>
               <hr className='mb-2' />
               <p>

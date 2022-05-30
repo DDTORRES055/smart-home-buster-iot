@@ -104,7 +104,7 @@ function Header() {
           </li> */}
           {/* <!-- Profile menu --> */}
           <li className="relative">
-            <span className='text-white mr-4'>{user.email}</span>
+            <span className='text-gray-800 mr-4 dark:text-gray-200'>{user?.email}</span>
             <button
               className="rounded-full focus:shadow-outline-purple focus:outline-none"
               onClick={handleProfileClick}
