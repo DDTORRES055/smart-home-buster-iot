@@ -41,7 +41,7 @@ function Header() {
           <MenuIcon className="w-6 h-6" aria-hidden="true" />
         </button>
         {/* <!-- Search input --> */}
-        <div className="flex justify-center flex-1 lg:mr-32">
+        {/* <div className="flex justify-center flex-1 lg:mr-32">
           <div className="relative w-full max-w-xl mr-6 focus-within:text-purple-500">
             <div className="absolute inset-y-0 flex items-center pl-2">
               <SearchIcon className="w-4 h-4" aria-hidden="true" />
@@ -52,8 +52,8 @@ function Header() {
               aria-label="Search"
             />
           </div>
-        </div>
-        <ul className="flex items-center flex-shrink-0 space-x-6">
+        </div> */}
+        <ul className="flex items-center flex-shrink-0 space-x-6 lg:ml-auto">
           {/* <!-- Theme toggler --> */}
           <li className="flex">
             <button
@@ -69,22 +69,22 @@ function Header() {
             </button>
           </li>
           {/* <!-- Notifications menu --> */}
-          <li className="relative">
-            <button
+          {/* <li className="relative"> */}
+            {/* <button
               className="relative align-middle rounded-md focus:outline-none focus:shadow-outline-purple"
               onClick={handleNotificationsClick}
               aria-label="Notifications"
               aria-haspopup="true"
-            >
-              <BellIcon className="w-5 h-5" aria-hidden="true" />
+            > */}
+              {/* <BellIcon className="w-5 h-5" aria-hidden="true" /> */}
               {/* <!-- Notification badge --> */}
-              <span
+              {/* <span
                 aria-hidden="true"
                 className="absolute top-0 right-0 inline-block w-3 h-3 transform translate-x-1 -translate-y-1 bg-red-600 border-2 border-white rounded-full dark:border-gray-800"
               ></span>
-            </button>
+            </button> */}
 
-            <Dropdown
+            {/* <Dropdown
               align="right"
               isOpen={isNotificationsMenuOpen}
               onClose={() => setIsNotificationsMenuOpen(false)}
@@ -101,9 +101,10 @@ function Header() {
                 <span>Alerts</span>
               </DropdownItem>
             </Dropdown>
-          </li>
+          </li> */}
           {/* <!-- Profile menu --> */}
           <li className="relative">
+            <span className='text-white mr-4'>{user.email}</span>
             <button
               className="rounded-full focus:shadow-outline-purple focus:outline-none"
               onClick={handleProfileClick}
@@ -112,7 +113,7 @@ function Header() {
             >
               <Avatar
                 className="align-middle"
-                src="https://images.unsplash.com/photo-1502378735452-bc7d86632805?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=200&fit=max&s=aa3a807e1bbdfd4364d1f449eaa96d82"
+                src="https://i.pinimg.com/736x/7c/ee/6f/7cee6fa507169843e3430a90dd5377d4.jpg"
                 alt=""
                 aria-hidden="true"
               />

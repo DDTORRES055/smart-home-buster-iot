@@ -26,6 +26,13 @@ import { ReactComponent as DropdownIcon } from './dropdown.svg'
 import { ReactComponent as OutlinePersonIcon } from './outlinePerson.svg'
 import { ReactComponent as OutlineCogIcon } from './outlineCog.svg'
 import { ReactComponent as OutlineLogoutIcon } from './outlineLogout.svg'
+import { ReactComponent as CameraSolid } from './camera-solid.svg'
+import { ReactComponent as LightbulbRegular } from './lightbulb-regular.svg'
+import { ReactComponent as PersonWalkingSolid } from './person-walking-solid.svg'
+import { ReactComponent as PlugSolid } from './plug-solid.svg'
+import { ReactComponent as TemperatureHalfSolid } from './temperature-half-solid.svg'
+import { ReactComponent as ObjectGroupRegular } from './object-group-regular.svg'
+import { ReactComponent as ClockRegular } from './clock-regular.svg'
 
 export {
   ButtonsIcon,
@@ -56,4 +63,11 @@ export {
   OutlinePersonIcon,
   OutlineCogIcon,
   OutlineLogoutIcon,
+  CameraSolid,
+  LightbulbRegular,
+  PersonWalkingSolid,
+  PlugSolid,
+  TemperatureHalfSolid,
+  ObjectGroupRegular,
+  ClockRegular,
 }

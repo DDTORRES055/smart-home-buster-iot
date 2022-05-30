@@ -23,7 +23,7 @@ function Login() {
     try {
       await login(email, password)
     } catch (error) {
-      setLoginError("Credenciales incorrectas")
+      setLoginError("Credenciales invalidas")
       setTimeout(() => {
         setLoginError('')
       }, 3000)
@@ -82,13 +82,13 @@ function Login() {
               </Button>
 
               {loginError && (
-                <div className='mt-4 text-red-600 text-sm'>{loginError}</div>
+                <div className='mt-4 text-red-600 text-sm text-center'>{loginError}</div>
               )}
             </div>
             <div className='text-center text-sm text-gray-400 italic font-light w-full'>
               <hr className='mb-2' />
               <p>
-                Made by: <br />
+                Creado por: <br />
                 <a
                   href='https://github.com/DDTORRES055'
                   className=' hover:text-purple-400'

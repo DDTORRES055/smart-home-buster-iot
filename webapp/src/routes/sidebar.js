@@ -12,6 +12,21 @@ const routes = [
     name: 'Dashboard', // name that appear in Sidebar
   },
   {
+    path: '/app/devices',
+    icon: 'HomeIcon',
+    name: 'Dispositivos',
+  },
+  {
+    path: '/app/groups',
+    icon: 'ObjectGroupRegular',
+    name: 'Grupos',
+  },
+  {
+    path: '/app/routines',
+    icon: 'ClockRegular',
+    name: 'Rutinas',
+  },
+  {
     path: '/app/forms',
     icon: 'FormsIcon',
     name: 'Forms',
