@@ -40,7 +40,7 @@ function Dashboard() {
             onClick={async () =>
               sensors[key].type === 'motion'
                 ? await setSensorActive(key, !sensors[key].active)
-                : toggleSensorPanel(sensors[key])
+                : toggleSensorPanel(key)
             }
           />
         ))}

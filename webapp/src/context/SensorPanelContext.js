@@ -13,9 +13,9 @@ export const SensorPanelProvider = ({ children }) => {
   const [isSensorPanelOpen, setIsSensorPanelOpen] = useState(false)
   const [sensorSelected, setSensorSelected] = useState(null)
 
-  function toggleSensorPanel( sensor ) {
+  function toggleSensorPanel( sensorKey ) {
     setIsSensorPanelOpen(!isSensorPanelOpen)
-    setSensorSelected(sensor)
+    setSensorSelected(sensorKey)
   }
 
   function closeSensorPanel() {

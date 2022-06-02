@@ -3,6 +3,7 @@ import React from 'react'
 import { Transition, Backdrop } from '@windmill/react-ui'
 
 import { useSensorPanel } from '../../context/SensorPanelContext'
+import { useIoT } from '../../context/IoTContext'
 
 import { Button } from '@windmill/react-ui'
 import CameraInfo from './CameraInfo'
@@ -13,6 +14,7 @@ import { XMarkSolid } from '../../icons'
 function SensorPanel() {
   const { isSensorPanelOpen, sensorSelected, closeSensorPanel } =
     useSensorPanel()
+  const { sensors } = useIoT()
 
   return (
     <Transition show={isSensorPanelOpen}>
@@ -48,15 +50,15 @@ function SensorPanel() {
 
             <div className='flex flex-col items-center px-4 overflow-auto'>
               <h2 className='text-4xl text-black my-4 dark:text-white'>
-                {sensorSelected?.name}
+                {sensors[sensorSelected]?.name}
               </h2>
-              {sensorSelected && sensorSelected.type === 'camera' && (
-                <CameraInfo sensor={sensorSelected} />
+              {sensors[sensorSelected]?.type === 'camera' && (
+                <CameraInfo sensor={sensors[sensorSelected]} />
               )}
-              {sensorSelected && sensorSelected.type === 'motion' && (
+              {sensors[sensorSelected]?.type === 'motion' && (
                 <MotionSensorInfo />
               )}
-              {sensorSelected && sensorSelected.type === 'temperature' && (
+              {sensors[sensorSelected]?.type === 'temperature' && (
                 <TemperatureSensorInfo />
               )}
             </div>
