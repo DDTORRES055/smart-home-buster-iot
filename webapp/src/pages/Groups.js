@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react'
 
 import { useIoT } from '../context/IoTContext'
+import { useSensorPanel } from '../context/SensorPanelContext'
 
 import DeviceCard from '../components/Cards/DeviceCard'
 import PageTitle from '../components/Typography/PageTitle'
 
 function Groups() {
-  const { devices, loadingDevices, setDeviceState } = useIoT()
+  const { devices, sensors, loadingDevices, setDeviceState } = useIoT()
+  const { toggleSensorPanel } = useSensorPanel()
 
   return (
     <>

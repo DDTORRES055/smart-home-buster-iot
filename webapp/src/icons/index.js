@@ -33,6 +33,7 @@ import { ReactComponent as PlugSolid } from './plug-solid.svg'
 import { ReactComponent as TemperatureHalfSolid } from './temperature-half-solid.svg'
 import { ReactComponent as ObjectGroupRegular } from './object-group-regular.svg'
 import { ReactComponent as ClockRegular } from './clock-regular.svg'
+import { ReactComponent as XMarkSolid } from './xmark-solid.svg'
 
 export {
   ButtonsIcon,
@@ -70,4 +71,5 @@ export {
   TemperatureHalfSolid,
   ObjectGroupRegular,
   ClockRegular,
+  XMarkSolid,
 }

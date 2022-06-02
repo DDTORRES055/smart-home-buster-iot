@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react'
 
 import { useIoT } from '../context/IoTContext'
+import { useSensorPanel } from '../context/SensorPanelContext'
 
 import DeviceCard from '../components/Cards/DeviceCard'
 import PageTitle from '../components/Typography/PageTitle'
 
 function Dashboard() {
-  const { devices, loadingDevices, setDeviceState } = useIoT()
+  const { devices, sensors, loadingDevices, setDeviceState, setSensorActive } =
+    useIoT()
+  const { toggleSensorPanel } = useSensorPanel()
 
   return (
     <>
@@ -27,6 +30,20 @@ function Dashboard() {
               }
             />
           ))}
+
+        {Object.keys(sensors).map((key) => (
+          <DeviceCard
+            key={key}
+            label={sensors[key].name}
+            type={sensors[key].type}
+            value={sensors[key].active}
+            onClick={async () =>
+              sensors[key].type === 'motion'
+                ? await setSensorActive(key, !sensors[key].active)
+                : toggleSensorPanel(sensors[key])
+            }
+          />
+        ))}
       </div>
     </>
   )

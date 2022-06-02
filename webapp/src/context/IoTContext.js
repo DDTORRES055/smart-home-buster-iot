@@ -14,7 +14,9 @@ export const useIoT = () => {
 export function IoTProvider({ children }) {
   const { user } = useAuth()
   const [devices, setDevices] = useState([])
+  const [sensors, setSensors] = useState([])
   const [loadingDevices, setLoadingDevices] = useState(true)
+  const [loadingSensors, setLoadingSensors] = useState(true)
 
   useEffect(() => {
     if (user) {
@@ -24,6 +26,13 @@ export function IoTProvider({ children }) {
         const data = snapshot.val()
         setDevices(data)
       })
+
+      const sensorsRef = ref(database, 'sensors')
+      onValue(sensorsRef, (snapshot) => {
+        console.log('Read sensors from firebase: ', snapshot.val())
+        const data = snapshot.val()
+        setSensors(data)
+      })
     }
   }, [user])
 
@@ -31,9 +40,23 @@ export function IoTProvider({ children }) {
     const deviceRef = ref(database, `devices/${deviceId}`)
     const snapshot = await get(deviceRef)
     const device = snapshot.val()
-    if (device.type === 'lightbulb' || device.type === 'plug') {
+    if (
+      device.type === 'lightbulb' ||
+      device.type === 'plug' ||
+      device.type === 'group'
+    ) {
       const deviceStateRef = ref(database, `devices/${deviceId}/state`)
       set(deviceStateRef, state)
+    }
+  }
+
+  const setSensorActive = async (sensorId, active) => {
+    const sensorRef = ref(database, `sensors/${sensorId}`)
+    const snapshot = await get(sensorRef)
+    const sensor = snapshot.val()
+    if (sensor.type === 'motion') {
+      const sensorActiveRef = ref(database, `sensors/${sensorId}/active`)
+      set(sensorActiveRef, active)
     }
   }
 
@@ -41,10 +64,12 @@ export function IoTProvider({ children }) {
     <iotContext.Provider
       value={{
         devices,
+        sensors,
         loadingDevices,
         setDevices,
         setLoadingDevices,
         setDeviceState,
+        setSensorActive,
       }}
     >
       {children}

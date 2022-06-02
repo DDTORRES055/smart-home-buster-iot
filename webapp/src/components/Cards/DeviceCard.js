@@ -5,6 +5,7 @@ import {
   PlugSolid,
   LightbulbRegular,
   CameraSolid,
+  ObjectGroupRegular,
 } from '../../icons'
 import LightbulbCheckbox from '../Forms/LightbulbCheckbox'
 import StateCheckbox from '../Forms/StateCheckbox'
@@ -22,11 +23,12 @@ export default function DeviceCard({ label, type, value, onClick }) {
           {type === 'plug' && <PlugSolid />}
           {type === 'lightbulb' && <LightbulbRegular />}
           {type === 'camera' && <CameraSolid />}
+          {type === 'group' && <ObjectGroupRegular />}
         </div>
         <div className='text-sm'>{label}</div>
       </div>
       {type === 'lightbulb' && <LightbulbCheckbox checked={value} />}
-      {(type === 'plug' || type === 'group') && (
+      {(type === 'plug' || type === 'group' || type === 'motion') && (
         <StateCheckbox checked={value} />
       )}
     </div>

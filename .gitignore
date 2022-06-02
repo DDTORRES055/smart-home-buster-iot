@@ -1,5 +1,7 @@
 .vscode
+.firebase
 .env
 node_modules
 *-lock.json
 build
+*.log

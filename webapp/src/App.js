@@ -8,6 +8,7 @@ import {
 import AccessibleNavigationAnnouncer from './components/AccessibleNavigationAnnouncer'
 import { AuthProvider } from './context/AuthContext'
 import { IoTProvider } from './context/IoTContext'
+import { SensorPanelProvider } from './context/SensorPanelContext'
 
 const Layout = lazy(() => import('./containers/Layout'))
 const Login = lazy(() => import('./pages/Login'))
@@ -23,7 +24,9 @@ function App() {
 
             {/* Place new routes over this */}
             <IoTProvider>
-              <Route path='/app' component={Layout} />
+              <SensorPanelProvider>
+                <Route path='/app' component={Layout} />
+              </SensorPanelProvider>
             </IoTProvider>
             {/* If you have an index page, you can remothis Redirect */}
             <Redirect exact from='/' to='/login' />
