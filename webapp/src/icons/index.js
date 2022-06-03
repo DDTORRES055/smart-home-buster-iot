@@ -34,6 +34,8 @@ import { ReactComponent as TemperatureHalfSolid } from './temperature-half-solid
 import { ReactComponent as ObjectGroupRegular } from './object-group-regular.svg'
 import { ReactComponent as ClockRegular } from './clock-regular.svg'
 import { ReactComponent as XMarkSolid } from './xmark-solid.svg'
+import { ReactComponent as GearSolid } from './gear-solid.svg'
+import { ReactComponent as Spinner } from './spinner.svg'
 
 export {
   ButtonsIcon,
@@ -72,4 +74,6 @@ export {
   ObjectGroupRegular,
   ClockRegular,
   XMarkSolid,
+  GearSolid,
+  Spinner,
 }

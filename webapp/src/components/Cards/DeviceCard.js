@@ -6,11 +6,19 @@ import {
   LightbulbRegular,
   CameraSolid,
   ObjectGroupRegular,
+  GearSolid,
 } from '../../icons'
 import LightbulbCheckbox from '../Forms/LightbulbCheckbox'
 import StateCheckbox from '../Forms/StateCheckbox'
 
-export default function DeviceCard({ label, type, value, onClick }) {
+export default function DeviceCard({
+  label,
+  type,
+  value,
+  editable,
+  onClick,
+  onClickGear,
+}) {
   return (
     <div
       className='flex w-32 h-32 p-3 justify-between rounded-lg shadow-xl bg-white dark:bg-gray-800 cursor-pointer'
@@ -29,7 +37,15 @@ export default function DeviceCard({ label, type, value, onClick }) {
       </div>
       {type === 'lightbulb' && <LightbulbCheckbox checked={value} />}
       {(type === 'plug' || type === 'group' || type === 'motion') && (
-        <StateCheckbox checked={value} />
+        <div
+          id='state-checkbox'
+          className='flex flex-col justify-between pb-2 w-8'
+        >
+          <StateCheckbox checked={value} />
+          <span className=' text-black dark:text-white' onClick={onClickGear}>
+            {editable && <GearSolid />}
+          </span>
+        </div>
       )}
     </div>
   )

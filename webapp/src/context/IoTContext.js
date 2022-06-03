@@ -1,7 +1,15 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { database } from '../services/firebase/database'
 import { useAuth } from '../context/AuthContext'
-import { ref, onValue, child, get, set } from 'firebase/database'
+import {
+  ref,
+  onValue,
+  child,
+  get,
+  set,
+  remove,
+  update,
+} from 'firebase/database'
 
 const iotContext = createContext()
 
@@ -15,8 +23,10 @@ export function IoTProvider({ children }) {
   const { user } = useAuth()
   const [devices, setDevices] = useState([])
   const [sensors, setSensors] = useState([])
+  const [groups, setGroups] = useState([])
   const [loadingDevices, setLoadingDevices] = useState(true)
   const [loadingSensors, setLoadingSensors] = useState(true)
+  const [loadingGroups, setLoadingGroups] = useState(true)
 
   useEffect(() => {
     if (user) {
@@ -33,6 +43,13 @@ export function IoTProvider({ children }) {
         const data = snapshot.val()
         setSensors(data)
       })
+
+      const groupsRef = ref(database, 'groups')
+      onValue(groupsRef, (snapshot) => {
+        console.log('Read groups from firebase: ', snapshot.val())
+        const data = snapshot.val()
+        setGroups(data)
+      })
     }
   }, [user])
 
@@ -46,7 +63,7 @@ export function IoTProvider({ children }) {
       device.type === 'group'
     ) {
       const deviceStateRef = ref(database, `devices/${deviceId}/state`)
-      set(deviceStateRef, state)
+      await set(deviceStateRef, state)
     }
   }
 
@@ -56,8 +73,52 @@ export function IoTProvider({ children }) {
     const sensor = snapshot.val()
     if (sensor.type === 'motion') {
       const sensorActiveRef = ref(database, `sensors/${sensorId}/active`)
-      set(sensorActiveRef, active)
+      await set(sensorActiveRef, active)
     }
+  }
+
+  const setGroupState = async (groupId, state) => {
+    const groupRef = ref(database, `groups/${groupId}`)
+    const snapshot = await get(groupRef)
+    const group = snapshot.val()
+    if (group.type === 'group') {
+      const groupStateRef = ref(database, `groups/${groupId}/state`)
+      await set(groupStateRef, state)
+      for (const device of group.devices) {
+        await setDeviceState(device, state)
+      }
+    }
+  }
+
+  const addGroup = async (name, devices) => {
+    const groupRef = ref(database, `groups`)
+    const snapshot = await get(groupRef)
+    const groups = snapshot.val()
+    const groupId = Number(Object.keys(groups).at(-1).slice(1)) + 1
+    const group = {
+      name,
+      type: 'group',
+      devices,
+      state: false,
+    }
+    await set(groupRef, { ...groups, ["G" + groupId]: group })
+  }
+
+  const removeGroup = async (groupId) => {
+    const groupRef = ref(database, `groups/${groupId}`)
+    await remove(groupRef)
+  }
+
+  const updateGroup = async (groupId, name, devices) => {
+    const groupRef = ref(database, `groups/${groupId}`)
+    const snapshot = await get(groupRef)
+    const group = snapshot.val()
+    const updatedGroup = {
+      ...group,
+      name,
+      devices,
+    }
+    await update(groupRef, updatedGroup)
   }
 
   return (
@@ -65,11 +126,16 @@ export function IoTProvider({ children }) {
       value={{
         devices,
         sensors,
+        groups,
         loadingDevices,
         setDevices,
         setLoadingDevices,
         setDeviceState,
         setSensorActive,
+        setGroupState,
+        addGroup,
+        removeGroup,
+        updateGroup,
       }}
     >
       {children}
