@@ -28,6 +28,7 @@ export default function GroupModal({ groupKey, isModalOpen, setIsModalOpen }) {
   const [processing, setProcessing] = useState(false)
   const [isConfirmDeleteModalOpen, setIsConfirmDeleteModalOpen] =
     useState(false)
+  const [error, setError] = useState('')
 
   useEffect(() => {
     if (groupKey) {
@@ -46,15 +47,16 @@ export default function GroupModal({ groupKey, isModalOpen, setIsModalOpen }) {
 
   const handleChangeCheckbox = (event) => {
     const { value, checked } = event.target
+    const oldDevices = group?.devices || []
     if (checked) {
       setGroup({
         ...group,
-        devices: [...group.devices, value],
+        devices: [...oldDevices, value],
       })
     } else {
       setGroup({
         ...group,
-        devices: group.devices.filter((device) => device !== value),
+        devices: oldDevices.filter((device) => device !== value),
       })
     }
   }
@@ -68,14 +70,22 @@ export default function GroupModal({ groupKey, isModalOpen, setIsModalOpen }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-    setProcessing(true)
-    if (groupKey) {
-      await updateGroup(groupKey, group.name, group.devices)
-    } else {
-      await addGroup(group.name, group.devices)
+    try {
+      setProcessing(true)
+      if (groupKey) {
+        await updateGroup(groupKey, group.name, group.devices)
+      } else {
+        await addGroup(group.name, group.devices)
+      }
+      closeModal()
+    } catch (error) {
+      setError(error.message)
+      setTimeout(() => {
+        setError('')
+      }, 3000)
+    } finally {
+      setProcessing(false)
     }
-    setProcessing(false)
-    closeModal()
   }
 
   const handleDelete = async () => {
@@ -97,12 +107,13 @@ export default function GroupModal({ groupKey, isModalOpen, setIsModalOpen }) {
               placeholder='Jane Doe'
               value={group?.name}
               onChange={handleChangeInput}
+              required
             />
           </Label>
           <div className='mt-4'>
             <span>Dispositivos</span>
             <div className='grid gap-8 grid-cols-3 mt-2'>
-              {Object.keys(devices)
+              {Object.keys(devices || {})
                 .filter((key) => key.startsWith('D'))
                 .map((key) => (
                   <DeviceCheckbox
@@ -110,12 +121,17 @@ export default function GroupModal({ groupKey, isModalOpen, setIsModalOpen }) {
                     deviceKey={key}
                     label={devices[key].name}
                     type={devices[key].type}
-                    checked={group?.devices.includes(key)}
+                    checked={group?.devices?.includes(key)}
                     onChange={handleChangeCheckbox}
                   />
                 ))}
             </div>
           </div>
+          {error && (
+            <div className='mt-4 text-red-500 text-center'>
+              <span>{error}</span>
+            </div>
+          )}
         </ModalBody>
         <ModalFooter>
           {groupKey && (

@@ -91,6 +91,8 @@ export function IoTProvider({ children }) {
   }
 
   const addGroup = async (name, devices) => {
+    if(!name?.trim()) throw new Error('Debes ponerle un nombre al grupo')
+    if(!devices?.length) throw new Error('Debes seleccionar al menos un dispositivo')
     const groupRef = ref(database, `groups`)
     const snapshot = await get(groupRef)
     const groups = snapshot.val()
@@ -110,6 +112,8 @@ export function IoTProvider({ children }) {
   }
 
   const updateGroup = async (groupId, name, devices) => {
+    if(!name?.trim()) throw new Error('Debes ponerle un nombre al grupo')
+    if(!devices?.length) throw new Error('Debes seleccionar al menos un dispositivo')
     const groupRef = ref(database, `groups/${groupId}`)
     const snapshot = await get(groupRef)
     const group = snapshot.val()
