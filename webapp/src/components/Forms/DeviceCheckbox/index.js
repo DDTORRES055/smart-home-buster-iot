@@ -18,12 +18,12 @@ export default function DeviceCheckbox({
         }`}
       >
         <div
-          className={`flex justify-between items-center transition-colors duration-500 text-sm ${
+          className={`flex justify-between items-center h-10 transition-colors duration-500 text-sm ${
             checked && ' text-purple-500'
           }`}
         >
           <div>{label}</div>
-          <div className='min-w-4'>
+          <div className='ml-4 w-6'>
             {type === 'plug' && <PlugSolid />}
             {type === 'lightbulb' && <LightbulbRegular />}
           </div>
@@ -35,7 +35,7 @@ export default function DeviceCheckbox({
         value={deviceKey}
         checked={checked}
         onChange={onChange}
-        className=' w-0 h-0'
+        className=' w-0 h-0 opacity-0'
       />
     </div>
   )
