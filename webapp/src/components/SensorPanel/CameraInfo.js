@@ -10,7 +10,7 @@ export default function CameraInfo({ sensor }) {
         .map((key) => (
           <div
             key={key}
-            className='flex flex-col items-center w-full p-10 my-4 rounded-lg dark:bg-gray-700'
+            className='flex flex-col items-center w-full p-10 my-4 rounded-lg shadow-md bg-gray-100 dark:bg-gray-700'
           >
             <div className='text-center text-lg text-black mb-4 dark:text-white'>
               {formatWithDayOfWeek(sensor[key].Ts)}
