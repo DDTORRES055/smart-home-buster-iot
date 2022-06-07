@@ -5,9 +5,10 @@ import { useAuth } from '../context/AuthContext'
 import ImageLight from '../assets/img/login-office.jpeg'
 import ImageDark from '../assets/img/login-office-dark.jpeg'
 import { Label, Input, Button } from '@windmill/react-ui'
+import Loader from '../components/Loader'
 
 function Login() {
-  const { user, login } = useAuth()
+  const { user, loadingUser, login } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [redirect, setRedirect] = useState(false)
@@ -33,6 +34,7 @@ function Login() {
 
   return (
     <div className='flex items-center min-h-screen p-6 bg-gray-50 dark:bg-gray-900'>
+      <Loader visible={loadingUser} />
       {redirect && <Redirect to='/app' />}
       <div className='flex-1 h-full max-w-4xl mx-auto overflow-hidden bg-white rounded-lg shadow-xl dark:bg-gray-800'>
         <div className='flex flex-col overflow-y-auto md:flex-row'>

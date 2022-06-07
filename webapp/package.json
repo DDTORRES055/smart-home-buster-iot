@@ -13,6 +13,7 @@
     "react-chartjs-2": "2.9.0",
     "react-dom": "^16.13.1",
     "react-focus-lock": "2.4.0",
+    "react-fullpage-custom-loader": "^0.1.6",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
     "react-thermometer-component": "^1.0.1",
