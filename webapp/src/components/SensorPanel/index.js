@@ -59,7 +59,7 @@ function SensorPanel() {
                 <MotionSensorInfo />
               )}
               {sensors[sensorSelected]?.type === 'temperature' && (
-                <TemperatureSensorInfo />
+                <TemperatureSensorInfo sensor={sensors[sensorSelected]} />
               )}
             </div>
           </div>

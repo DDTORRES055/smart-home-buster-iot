@@ -5,4 +5,4 @@ node_modules
 *-lock.json
 build
 *.log
-tailwind.output.css
+**/tailwind.output.css

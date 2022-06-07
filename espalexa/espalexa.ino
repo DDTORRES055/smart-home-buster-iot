@@ -11,8 +11,6 @@
 // Provide the RTDB payload printing info and other helper functions.
 #include <addons/RTDBHelper.h>
 
-#define VELOCIDAD_PUERTO_SERIE 115200
-
 /* Network credentials */
 #define WIFI_SSID "SSID"
 #define WIFI_PASS "PASSWORD"
@@ -22,8 +20,6 @@
 #define DATABASE_SECRET "your_database_secret"
 
 Espalexa espalexa;
-
-EspalexaDevice* device3; //this is optional
 
 /* Define the Firebase Data object */
 FirebaseData stream;
@@ -72,7 +68,7 @@ void group2Changed(uint8_t brightness);
 void setup()
 {
     // Iniciamos puerto serie
-    Serial.begin(VELOCIDAD_PUERTO_SERIE);
+    Serial.begin(115200);
 
     // Configuramos como pines de salida
     pinMode(PIN_1, OUTPUT);
