@@ -1,23 +1,36 @@
-const admin = require("firebase-admin");
 const functions = require("firebase-functions");
+const admin = require("firebase-admin");
+admin.initializeApp();
+
+const { convertTZ } = require("./utils/datetime");
 
 exports.checkroutines = functions.pubsub
   .schedule("* * * * *")
   .timeZone("America/Mexico_City")
-  .onRun((context) => {
-    const snaphot = admin.database().ref("routines").once("value");
+  .onRun(async (context) => {
+    const snaphot = await admin.database().ref("routines").once("value");
     const routines = snaphot.val();
+    const now = convertTZ(new Date(context.timestamp), "America/Mexico_City");
+    console.log({ now });
 
     for (const routineKey in routines) {
       if (Object.hasOwnProperty.call(routines, routineKey)) {
         const routine = routines[routineKey];
-        const now = new Date();
-        const start = new Date(routine.start);
+        const hour =
+          routine.time.period.toLowerCase() === "a.m." ?
+            routine.time.hour :
+            routine.time.hour + 12;
+        const minutes = routine.time.minutes;
 
-        if (start.getTime() <= now.getTime() && routine.active === true) {
-          admin.database().ref(`routines/${routineKey}`).update({
-            active: false,
-          });
+        if (
+          routine.active === true &&
+          // routine.pending === true &&
+          now.getHours() === hour &&
+          now.getMinutes() === minutes
+        ) {
+          // admin.database().ref(`routines/${routineKey}`).update({
+          //   pending: false,
+          // });
           const actions = routine.actions;
 
           for (const actionKey in actions) {
@@ -36,18 +49,18 @@ exports.checkroutines = functions.pubsub
     }
   });
 
-exports.resetRoutines = functions.pubsub
-  .schedule("0 0 * * *")
-  .timeZone("America/Mexico_City")
-  .onRun((context) => {
-    const snaphot = admin.database().ref("routines").once("value");
-    const routines = snaphot.val();
+// exports.resetRoutines = functions.pubsub
+//   .schedule("0 0 * * *")
+//   .timeZone("America/Mexico_City")
+//   .onRun((context) => {
+//     const snaphot = admin.database().ref("routines").once("value");
+//     const routines = snaphot.val();
 
-    for (const routineKey in routines) {
-      if (Object.hasOwnProperty.call(routines, routineKey)) {
-        admin.database().ref(`routines/${routineKey}`).update({
-          active: true,
-        });
-      }
-    }
-  });
+//     for (const routineKey in routines) {
+//       if (Object.hasOwnProperty.call(routines, routineKey)) {
+//         admin.database().ref(`routines/${routineKey}`).update({
+//           pending: true,
+//         });
+//       }
+//     }
+//   });
