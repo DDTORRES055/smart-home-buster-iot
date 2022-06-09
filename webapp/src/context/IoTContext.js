@@ -24,9 +24,11 @@ export function IoTProvider({ children }) {
   const [devices, setDevices] = useState([])
   const [sensors, setSensors] = useState([])
   const [groups, setGroups] = useState([])
+  const [routines, setRoutines] = useState([])
   const [loadingDevices, setLoadingDevices] = useState(true)
   const [loadingSensors, setLoadingSensors] = useState(true)
   const [loadingGroups, setLoadingGroups] = useState(true)
+  const [loadingRoutines, setLoadingRoutines] = useState(true)
 
   useEffect(() => {
     if (user) {
@@ -49,6 +51,13 @@ export function IoTProvider({ children }) {
         console.log('Read groups from firebase: ', snapshot.val())
         const data = snapshot.val()
         setGroups(data)
+      })
+
+      const routinesRef = ref(database, 'routines')
+      onValue(routinesRef, (snapshot) => {
+        console.log('Read routines from firebase: ', snapshot.val())
+        const data = snapshot.val()
+        setRoutines(data)
       })
     }
   }, [user])
@@ -125,21 +134,75 @@ export function IoTProvider({ children }) {
     await update(groupRef, updatedGroup)
   }
 
+  const setRoutineActive = async (routineId, active) => {
+    const routineRef = ref(database, `routines/${routineId}`)
+    const snapshot = await get(routineRef)
+    const routine = snapshot.val()
+    if (routine.type === 'routine') {
+      const routineActiveRef = ref(database, `routines/${routineId}/active`)
+      await set(routineActiveRef, active)
+    }
+  }
+
+  const addRoutine = async (name, time, actions) => {
+    if(!name?.trim()) throw new Error('Debes ponerle un nombre a la rutina')
+    if(!time?.trim()) throw new Error('Debes ponerle un tiempo a la rutina')
+    if(!Object.keys(actions || {}).length) throw new Error('Debes ponerle al menos una acción a la rutina')
+    const routineRef = ref(database, `routines`)
+    const snapshot = await get(routineRef)
+    const routines = snapshot.val()
+    const routineId = routines ? Number(Object.keys(routines).at(-1).slice(1)) + 1 : 0
+    const routine = {
+      name,
+      actions,
+      time,
+      type: 'routine',
+      active: true,
+    }
+    await set(routineRef, { ...routines, ["R" + routineId]: routine })
+  }
+
+  const removeRoutine = async (routineId) => {
+    const routineRef = ref(database, `routines/${routineId}`)
+    await remove(routineRef)
+  }
+
+  const updateRoutine = async (routineId, name, time, actions) => {
+    if(!name?.trim()) throw new Error('Debes ponerle un nombre a la rutina')
+    if(!time?.trim()) throw new Error('Debes ponerle un tiempo a la rutina')
+    if(!Object.keys(actions || {}).length) throw new Error('Debes ponerle al menos una acción a la rutina')
+    const routineRef = ref(database, `routines/${routineId}`)
+    const snapshot = await get(routineRef)
+    const routine = snapshot.val()
+    const updatedRoutine = {
+      ...routine,
+      name,
+      time,
+      actions,
+    }
+    await update(routineRef, updatedRoutine)
+  }
+
   return (
     <iotContext.Provider
       value={{
         devices,
         sensors,
         groups,
+        routines,
         loadingDevices,
         setDevices,
         setLoadingDevices,
         setDeviceState,
         setSensorActive,
         setGroupState,
+        setRoutineActive,
         addGroup,
         removeGroup,
         updateGroup,
+        addRoutine,
+        removeRoutine,
+        updateRoutine,
       }}
     >
       {children}

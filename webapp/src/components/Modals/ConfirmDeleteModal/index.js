@@ -10,7 +10,7 @@ import {
 
 import { Spinner } from '../../../icons'
 
-export default function ConfirmDeleteModal({ name, onConfirm, isModalOpen, setIsModalOpen }) {
+export default function ConfirmDeleteModal({ label, name, onConfirm, isModalOpen, setIsModalOpen }) {
   const [processing, setProcessing] = useState(false)
 
   const closeModal = () => {
@@ -20,11 +20,11 @@ export default function ConfirmDeleteModal({ name, onConfirm, isModalOpen, setIs
   return (
     <Modal isOpen={isModalOpen} onClose={closeModal}>
         <ModalHeader>
-          Eliminar grupo
+          Eliminar {label}
         </ModalHeader>
         <ModalBody>
           <p>
-            ¿Estás seguro que quieres eliminar el grupo <strong>{name}</strong>?
+            ¿Estás seguro que quieres eliminar <strong>{name}</strong>?
           </p>
         </ModalBody>
         <ModalFooter>

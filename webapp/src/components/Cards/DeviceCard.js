@@ -7,6 +7,7 @@ import {
   CameraSolid,
   ObjectGroupRegular,
   GearSolid,
+  ClockRegular,
 } from '../../icons'
 import LightbulbCheckbox from '../Forms/LightbulbCheckbox'
 import StateCheckbox from '../Forms/StateCheckbox'
@@ -32,11 +33,12 @@ export default function DeviceCard({
           {type === 'lightbulb' && <LightbulbRegular />}
           {type === 'camera' && <CameraSolid />}
           {type === 'group' && <ObjectGroupRegular />}
+          {type === 'routine' && <ClockRegular />}
         </div>
         <div className='text-sm'>{label}</div>
       </div>
       {type === 'lightbulb' && <LightbulbCheckbox checked={value} />}
-      {(type === 'plug' || type === 'group' || type === 'motion') && (
+      {(type === 'plug' || type === 'group' || type === 'motion' || type === 'routine') && (
         <div
           id='state-checkbox'
           className='flex flex-col justify-between pb-2 w-8'

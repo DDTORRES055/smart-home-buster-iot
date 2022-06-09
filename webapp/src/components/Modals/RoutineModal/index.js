@@ -14,16 +14,26 @@ import {
 
 import { Spinner } from '../../../icons'
 
-import DeviceCheckbox from '../../Forms/DeviceCheckbox'
+import ActionsSelect from '../../Forms/ActionsSelect'
 import ConfirmDeleteModal from '../ConfirmDeleteModal'
+import TimeInput from '../../TimeInput'
 
-export default function GroupModal({ groupKey, isModalOpen, setIsModalOpen }) {
-  const { devices, groups, addGroup, removeGroup, updateGroup } = useIoT()
-  const [group, setGroup] = useState(
-    groups[groupKey] || {
-      name: '',
-      devices: [],
-    }
+export default function RoutineModal({
+  routineKey,
+  isModalOpen,
+  setIsModalOpen,
+}) {
+  const { routines, addRoutine, removeRoutine, updateRoutine } = useIoT()
+  const [routine, setRoutine] = useState(
+    routines
+      ? routines[routineKey]
+      : {
+          name: '',
+          time: {
+            hour: '00',
+            minutes: '00',
+          },
+        }
   )
   const [processing, setProcessing] = useState(false)
   const [isConfirmDeleteModalOpen, setIsConfirmDeleteModalOpen] =
@@ -31,40 +41,62 @@ export default function GroupModal({ groupKey, isModalOpen, setIsModalOpen }) {
   const [error, setError] = useState('')
 
   useEffect(() => {
-    if (groupKey) {
-      setGroup(groups[groupKey])
+    if (routineKey && routines) {
+      setRoutine(routines[routineKey])
     } else {
-      setGroup({
+      setRoutine({
         name: '',
-        devices: [],
+        time: {
+          hour: '00',
+          minutes: '00',
+        },
+        actions: {
+          D0: {
+            deviceType: 'devices',
+            modificator: 'state',
+            state: false,
+          },
+        },
       })
     }
-  }, [groupKey, groups])
+  }, [routineKey, routines])
 
   const closeModal = () => {
     setIsModalOpen(false)
-  }
-
-  const handleChangeCheckbox = (event) => {
-    const { value, checked } = event.target
-    const oldDevices = group?.devices || []
-    if (checked) {
-      setGroup({
-        ...group,
-        devices: [...oldDevices, value],
-      })
-    } else {
-      setGroup({
-        ...group,
-        devices: oldDevices.filter((device) => device !== value),
-      })
-    }
+    setRoutine({
+      name: '',
+      time: {
+        hour: '00',
+        minutes: '00',
+      },
+      actions: {
+        D0: {
+          deviceType: 'devices',
+          modificator: 'state',
+          state: false,
+        },
+      },
+    })
   }
 
   const handleChangeInput = (event) => {
-    setGroup({
-      ...group,
+    setRoutine({
+      ...routine,
       [event.target.name]: event.target.value,
+    })
+  }
+
+  const handleChangeTime = (event) => {
+    setRoutine({
+      ...routine,
+      time: event.target.value,
+    })
+  }
+
+  const handleChangeActions = (actions) => {
+    setRoutine({
+      ...routine,
+      actions,
     })
   }
 
@@ -72,10 +104,15 @@ export default function GroupModal({ groupKey, isModalOpen, setIsModalOpen }) {
     event.preventDefault()
     try {
       setProcessing(true)
-      if (groupKey) {
-        await updateGroup(groupKey, group.name, group.devices)
+      if (routineKey) {
+        await updateRoutine(
+          routineKey,
+          routine.name,
+          routine.time,
+          routine.actions
+        )
       } else {
-        await addGroup(group.name, group.devices)
+        await addRoutine(routine.name, routine.time, routine.actions)
       }
       closeModal()
     } catch (error) {
@@ -89,7 +126,7 @@ export default function GroupModal({ groupKey, isModalOpen, setIsModalOpen }) {
   }
 
   const handleDelete = async () => {
-    await removeGroup(groupKey)
+    await removeRoutine(routineKey)
     setProcessing(false)
     closeModal()
   }
@@ -97,7 +134,9 @@ export default function GroupModal({ groupKey, isModalOpen, setIsModalOpen }) {
   return (
     <Modal isOpen={isModalOpen} onClose={closeModal}>
       <form onSubmit={handleSubmit}>
-        <ModalHeader>{groupKey ? 'Editar grupo' : 'Crear grupo'}</ModalHeader>
+        <ModalHeader>
+          {routineKey ? 'Editar rutina' : 'Crear rutina'}
+        </ModalHeader>
         <ModalBody>
           <Label>
             <span>Nombre</span>
@@ -105,28 +144,24 @@ export default function GroupModal({ groupKey, isModalOpen, setIsModalOpen }) {
               name='name'
               className='mt-1'
               placeholder='Jane Doe'
-              value={group?.name}
+              value={routine?.name}
               onChange={handleChangeInput}
               required
             />
           </Label>
-          <div className='mt-4'>
-            <span>Dispositivos</span>
-            <div className='grid gap-8 grid-cols-3 mt-2'>
-              {Object.keys(devices || {})
-                .filter((key) => key.startsWith('D'))
-                .map((key) => (
-                  <DeviceCheckbox
-                    key={key}
-                    deviceKey={key}
-                    label={devices[key].name}
-                    type={devices[key].type}
-                    checked={group?.devices?.includes(key)}
-                    onChange={handleChangeCheckbox}
-                  />
-                ))}
-            </div>
-          </div>
+          <Label className='mt-4'>
+            <span>Hora de activación</span>
+            <TimeInput
+              name='time'
+              value={routine?.time ? routine.time : '00:00'}
+              onChange={handleChangeTime}
+              required
+            />
+          </Label>
+          <ActionsSelect
+            actions={routine?.actions}
+            setActions={handleChangeActions}
+          />
           {error && (
             <div className='mt-4 text-red-500 text-center'>
               <span>{error}</span>
@@ -134,16 +169,16 @@ export default function GroupModal({ groupKey, isModalOpen, setIsModalOpen }) {
           )}
         </ModalBody>
         <ModalFooter>
-          {groupKey && (
+          {routineKey && (
             <Button
               type='button'
               layout='outline'
-              className=' border-red-700 text-red-700 mr-2 dark:text-red-700'
+              className=' border-red-700 text-red-700 mr-2 w-full sm:w-auto dark:text-red-700'
               onClick={() => {
                 setIsConfirmDeleteModalOpen(true)
               }}
             >
-              Eliminar grupo
+              Eliminar rutina
             </Button>
           )}
           <Button
@@ -155,7 +190,7 @@ export default function GroupModal({ groupKey, isModalOpen, setIsModalOpen }) {
           </Button>
           <Button
             tag='label'
-            htmlFor='submit-group'
+            htmlFor='submit-routine'
             className='w-full sm:w-auto'
             disabled={processing}
           >
@@ -169,14 +204,14 @@ export default function GroupModal({ groupKey, isModalOpen, setIsModalOpen }) {
                 Procesando
               </>
             )}
-            <input id='submit-group' className='w-0 h-0' type='submit' />
+            <input id='submit-routine' className='w-0 h-0' type='submit' />
           </Button>
         </ModalFooter>
       </form>
-      {groupKey && (
+      {routineKey && (
         <ConfirmDeleteModal
-          label="grupo"
-          name={group?.name}
+          label='rutina'
+          name={routine?.name}
           onConfirm={handleDelete}
           isModalOpen={isConfirmDeleteModalOpen}
           setIsModalOpen={setIsConfirmDeleteModalOpen}

@@ -49,7 +49,7 @@ function Layout() {
                   />
                 ) : null
               })}
-              <Redirect exact from="/app" to="/app/groups" />
+              <Redirect exact from="/app" to="/app/routines" />
               <Route component={Page404} />
             </Switch>
           </Suspense>

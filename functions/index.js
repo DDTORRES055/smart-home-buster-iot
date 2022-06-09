@@ -16,17 +16,13 @@ exports.checkroutines = functions.pubsub
     for (const routineKey in routines) {
       if (Object.hasOwnProperty.call(routines, routineKey)) {
         const routine = routines[routineKey];
-        const hour =
-          routine.time.period.toLowerCase() === "a.m." ?
-            routine.time.hour :
-            routine.time.hour + 12;
-        const minutes = routine.time.minutes;
+        const [hour, minutes] = routine.time.split(":");
 
         if (
           routine.active === true &&
           // routine.pending === true &&
-          now.getHours() === hour &&
-          now.getMinutes() === minutes
+          now.getHours() === Number(hour) &&
+          now.getMinutes() === Number(minutes)
         ) {
           // admin.database().ref(`routines/${routineKey}`).update({
           //   pending: false,
@@ -38,10 +34,23 @@ exports.checkroutines = functions.pubsub
               const action = actions[actionKey];
               admin
                 .database()
-                .ref(`${action.deviceType}/${actionKey}`)
-                .update({
-                  [action.modificator]: action.state,
-                });
+                .ref(`${action.deviceType}/${actionKey}/${action.modificator}`)
+                .set(action.state);
+              if (action.deviceType === "groups") {
+                const groupDevices = await admin
+                  .database()
+                  .ref(`groups/${actionKey}/devices`)
+                  .once("value");
+                const groupDevicesList = groupDevices.val();
+                for (const deviceKey in groupDevicesList) {
+                  if (Object.hasOwnProperty.call(groupDevicesList, deviceKey)) {
+                    admin
+                      .database()
+                      .ref(`devices/${deviceKey}/state`)
+                      .set(action.state);
+                  }
+                }
+              }
             }
           }
         }
