@@ -25,10 +25,10 @@ const Blank = lazy(() => import('../pages/Blank'))
  * `routes/sidebar.js`
  */
 const routes = [
-  {
-    path: '/dashboard', // the url
-    component: Dashboard, // view rendered
-  },
+  // {
+  //   path: '/dashboard', // the url
+  //   component: Dashboard, // view rendered
+  // },
   {
     path: '/devices',
     component: Devices,
@@ -41,38 +41,38 @@ const routes = [
     path: '/routines',
     component: Routines,
   },
-  {
-    path: '/forms',
-    component: Forms,
-  },
-  {
-    path: '/cards',
-    component: Cards,
-  },
-  {
-    path: '/charts',
-    component: Charts,
-  },
-  {
-    path: '/buttons',
-    component: Buttons,
-  },
-  {
-    path: '/modals',
-    component: Modals,
-  },
-  {
-    path: '/tables',
-    component: Tables,
-  },
+  // {
+  //   path: '/forms',
+  //   component: Forms,
+  // },
+  // {
+  //   path: '/cards',
+  //   component: Cards,
+  // },
+  // {
+  //   path: '/charts',
+  //   component: Charts,
+  // },
+  // {
+  //   path: '/buttons',
+  //   component: Buttons,
+  // },
+  // {
+  //   path: '/modals',
+  //   component: Modals,
+  // },
+  // {
+  //   path: '/tables',
+  //   component: Tables,
+  // },
   {
     path: '/404',
     component: Page404,
   },
-  {
-    path: '/blank',
-    component: Blank,
-  },
+  // {
+  //   path: '/blank',
+  //   component: Blank,
+  // },
 ]
 
 export default routes
